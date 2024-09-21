@@ -26,6 +26,8 @@ A node.js with express server
 
 - Currently jest testing does not work because the project is configured with `type:module`, it might be changed later
 
+- You can use Postman for api testing
+
 ## Updates
 - Route documentation can be automated later on
 - Test will be updated
