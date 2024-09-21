@@ -1,0 +1,32 @@
+[
+    {
+        "userAvatar": "https://randomuser.me/api/portraits/men/32.jpg",
+        "username": "User456",
+        "timestamp": "2h ago",
+        "location": "New York",
+        "albumCoverUri": "https://via.placeholder.com/350x250",
+        "audioUri": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+        "description": "Just discovered this amazing track! 😍",
+        "spotifyLink": "https://open.spotify.com/track/xyz",
+        "comments": [
+        { "username": "Commenter1", "text": "Great track!" },
+        { "username": "Commenter2", "text": "This is my jam!" },
+        { "username": "Commenter3", "text": "Loved it!" }
+        ]
+    },
+    {
+        "userAvatar": "https://randomuser.me/api/portraits/women/44.jpg",
+        "username": "User789",
+        "timestamp": "1h ago",
+        "location": "Los Angeles",
+        "albumCoverUri": "https://via.placeholder.com/350x250",
+        "audioUri": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+        "description": "This song is so chill! 🎧",
+        "spotifyLink": "https://open.spotify.com/track/abc",
+        "comments": [
+        { "username": "Commenter4", "text": "Relaxing vibes!" },
+        { "username": "Commenter5", "text": "Perfect for studying!" },
+        { "username": "Commenter6", "text": "Smooth!" }
+        ]
+    }
+]
