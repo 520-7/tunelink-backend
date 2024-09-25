@@ -11,7 +11,7 @@ app.use(express.json());
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 app.get("/health", (req, res) => {
-  res.status(200).send("Server up and running.");
+  res.status(200).send("Server up and running");
 });
 
 app.post("/get_feed", async (req, res) => {
