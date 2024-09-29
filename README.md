@@ -5,6 +5,9 @@ A node.js with express server
 1. Clone this repository to your work directory
 2. Navigate into `tunelink-backend` (this repo) directory
 3. Run `npm i`, this will install all required packages for the backend
+4. Create a `.env` at root and copy contents of `.env.copy` into there, message on groupchat to get secrets
+
+You are ready to run the backend
 
 ## Run the server
 
