@@ -4,7 +4,6 @@ import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 
 const app = express();
-const port = 3000;
 
 app.use(express.json());
 
@@ -31,7 +30,4 @@ app.post("/get_feed", async (req, res) => {
   }
 });
 
-// Runs the server
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
-});
+export default app;
