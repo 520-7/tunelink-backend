@@ -9,8 +9,8 @@ describe("Test Endpoints", () => {
     expect(response.text).toBe("Server up and running.");
   });
 
-  it("should return 200 and valid JSON on /get_feed", async () => {
-    const response = await request(app).post("/get_feed");
+  it("should return 200 and valid JSON on /api/get_feed", async () => {
+    const response = await request(app).post("/api/get_feed");
     expect(response.status).toBe(200);
   });
 });
