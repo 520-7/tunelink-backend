@@ -67,6 +67,7 @@ export const uploadPost = async (req, res) => {
     const client = await getMongoClient();
     const db = client.db(DB);
     const postsCollection = db.collection(POST_BUCKET);
+    const usersCollection = db.collection(USER_BUCKET);
 
     let postDocument = {
       ownerUser: ObjectId.createFromHexString(ownerUser),
@@ -96,8 +97,17 @@ export const uploadPost = async (req, res) => {
       );
     }
 
-    // Insert the new post document into the database
     const result = await postsCollection.insertOne(postDocument);
+
+    const postId = result.insertedId;
+    const updateResult = await usersCollection.updateOne(
+      { _id: ObjectId.createFromHexString(ownerUser) },
+      { $push: { ownedPosts: postId } }
+    );
+
+    if (updateResult.matchedCount === 0) {
+      return res.status(404).json({ message: "User not found." });
+    }
 
     return res.status(201).json({
       message: "Post created successfully",

@@ -24,6 +24,7 @@ You are ready to run the backend
 - Run `npm test` to run tests defined in `/tests`
 - You can also use Postman for api testing
 - You will need testing_data to run all tests, email Ozel for the ZIP
+- Run `npm test -- tests/uploadRoutes.test.js` to run individual test suites
 
 ## Updates
 - Route documentation can be automated later on
