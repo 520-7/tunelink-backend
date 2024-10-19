@@ -1,4 +1,4 @@
-import { MongoClient, GridFSBucket } from "mongodb";
+import { MongoClient, GridFSBucket, ObjectId } from "mongodb";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -69,7 +69,7 @@ export const uploadPost = async (req, res) => {
     const postsCollection = db.collection(POST_BUCKET);
 
     let postDocument = {
-      ownerUser,
+      ownerUser: ObjectId.createFromHexString(ownerUser),
       likesCount: parseInt(likesCount, 10) || 0,
       timestamp: new Date(timestamp),
       albumCoverUrl: "",
@@ -101,7 +101,7 @@ export const uploadPost = async (req, res) => {
 
     return res.status(201).json({
       message: "Post created successfully",
-      postId: result.insertedId,
+      postId: result.insertedId.toString(),
     });
   } catch (error) {
     console.error("Error uploading post:", error);
@@ -164,7 +164,7 @@ export const uploadUser = async (req, res) => {
 
     return res.status(201).json({
       message: "User created successfully",
-      userId: result.insertedId,
+      userId: result.insertedId.toString(),
     });
   } catch (error) {
     console.error("Error uploading user:", error);
