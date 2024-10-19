@@ -19,19 +19,11 @@ You are ready to run the backend
     - An interactive api documentation page that lists available routes
     - Useful for development
 
-- `GET`:`/health`
-    - Response:
-        - 200: Server up and running
-        - *: Server not running
-- `POST`: `/api/get_feed`
-    - Response:
-        - 200: Returns a JSON object array, each object is an individual post on the homepage wall
-        - 500: Internal server error
-
 ## Tests
 
 - Run `npm test` to run tests defined in `/tests`
 - You can also use Postman for api testing
+- You will need testing_data to run all tests, email Ozel for the ZIP
 
 ## Updates
 - Route documentation can be automated later on

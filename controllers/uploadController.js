@@ -54,6 +54,61 @@ export const uploadFileToGridFS = async (filename, buffer, bucketName) => {
   }
 };
 
+export const uploadPost = async (req, res) => {
+  try {
+    const { ownerUser, likesCount, timestamp, caption, outLinks } = req.body;
+
+    if (!ownerUser || !timestamp || !caption) {
+      return res
+        .status(400)
+        .json({ message: "Missing required post metadata." });
+    }
+
+    const client = await getMongoClient();
+    const db = client.db(DB);
+    const postsCollection = db.collection(POST_BUCKET);
+
+    let postDocument = {
+      ownerUser,
+      likesCount: parseInt(likesCount, 10) || 0,
+      timestamp: new Date(timestamp),
+      albumCoverUrl: "",
+      audioUrl: "",
+      caption,
+      outLinks: outLinks || {},
+    };
+
+    // Check if albumCover file is provided and upload it
+    if (req.files && req.files.albumCover) {
+      postDocument.albumCoverUrl = await uploadFileToGridFS(
+        req.files.albumCover.originalname,
+        req.files.albumCover.buffer,
+        POST_IMAGE_BUCKET
+      );
+    }
+
+    // Check if audio file is provided and upload it
+    if (req.files && req.files.audio) {
+      postDocument.audioUrl = await uploadFileToGridFS(
+        req.files.audio.originalname,
+        req.files.audio.buffer,
+        MP3_BUCKET
+      );
+    }
+
+    // Insert the new post document into the database
+    const result = await postsCollection.insertOne(postDocument);
+
+    return res.status(201).json({
+      message: "Post created successfully",
+      postId: result.insertedId,
+    });
+  } catch (error) {
+    console.error("Error uploading post:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 export const uploadUser = async (req, res) => {
   try {
     const {

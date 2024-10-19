@@ -47,6 +47,12 @@ router.delete("/:userId", deleteUserById);
  *         schema:
  *           type: object
  *           properties:
+ *             _id:
+ *                type: string
+ *             userAvatarUrl:
+ *                type: string
+ *             userName:
+ *                type: string
  *             profileName:
  *               type: string
  *             followerCount:
@@ -75,6 +81,7 @@ router.delete("/:userId", deleteUserById);
  *       500:
  *         description: Internal Server Error.
  */
+// Swagger for this route has no body, will not work while using swagger, you can test on postman
 router.put("/:userId", updateUserById);
 
 /**

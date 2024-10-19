@@ -1,5 +1,6 @@
 import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
+import { uploadFileToGridFS } from "./uploadController.js";
 
 dotenv.config();
 
@@ -52,10 +53,25 @@ export const updateUserById = async (req, res) => {
     const { userId } = req.params;
     const id = ObjectId.createFromHexString(userId);
     const updateData = req.body;
+    delete updateData._id; // Ensure the _id field is not updated
 
     const client = await getMongoClient();
     const db = client.db(DB);
     const usersCollection = db.collection(USER_BUCKET);
+
+    // Check if a userAvatar file is included in the request and upload it
+    let userAvatarUrl;
+    if (req.file) {
+      userAvatarUrl = await uploadFileToGridFS(
+        req.file.originalname,
+        req.file.buffer,
+        USER_AVATAR_BUCKET
+      );
+    }
+
+    if (userAvatarUrl) {
+      updateData.userAvatarUrl = userAvatarUrl;
+    }
 
     const result = await usersCollection.updateOne(
       { _id: id },
@@ -66,7 +82,9 @@ export const updateUserById = async (req, res) => {
       return res.status(404).json({ message: "User not found." });
     }
 
-    return res.status(200).json({ message: "User updated successfully." });
+    return res
+      .status(200)
+      .json({ message: "User updated successfully.", userAvatarUrl });
   } catch (error) {
     console.error("Error updating user:", error);
     return res.status(500).json({ message: "Internal Server Error" });
