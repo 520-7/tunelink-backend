@@ -25,6 +25,7 @@ You are ready to run the backend
 - You can also use Postman for api testing
 - You will need testing_data to run all tests, email Ozel for the ZIP
 - Run `npm test -- tests/uploadRoutes.test.js` to run individual test suites
+- I suggest running test individually, mongo has to drop the database between each run, when they all run together it fails some tests because of not waiting for drop, in individual runs there are no errors.
 
 ## Updates
 - Route documentation can be automated later on

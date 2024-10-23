@@ -92,9 +92,9 @@ describe("Upload users and link posts (assign random avatar to users, assign ran
   });
 
   afterAll(() => {
-    if (client) {
-      client.close();
-    }
+    // if (client) {
+    //   client.close();
+    // }
   });
 
   it("should upload all users and return their userIds (assign random avatar with probability)", async () => {

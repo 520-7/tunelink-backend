@@ -136,41 +136,4 @@ router.post(
   }
 );
 
-/**
- * @swagger
- * /api/upload/uploadMP3:
- *   post:
- *     summary: Uploads MP3 to Mongo
- *     consumes:
- *       - multipart/form-data
- *     parameters:
- *       - in: formData
- *         name: file
- *         type: file
- *         description: The MP3 file to upload.
- *     responses:
- *       200:
- *         description: A successful response
- *       400:
- *         description: Bad request (e.g., file too large)
- *       500:
- *         description: Server error
- */
-router.post("/uploadMP3", upload.single("file"), async (req, res, next) => {
-  try {
-    await uploadMP3File(req, res);
-  } catch (err) {
-    if (err instanceof multer.MulterError) {
-      if (err.code === "LIMIT_FILE_SIZE") {
-        return res
-          .status(400)
-          .json({ error: "File size is too large. Max size is 10MB." });
-      }
-      return res.status(400).json({ error: err.message });
-    } else {
-      return next(err);
-    }
-  }
-});
-
 export default router;

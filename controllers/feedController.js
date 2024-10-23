@@ -5,16 +5,27 @@ dotenv.config();
 
 const mongoUri = process.env.MONGO_CONNECTION_STRING;
 
-export const getFeed = async (req, res) => {
-  let client;
+let client;
 
-  try {
+const getMongoClient = async () => {
+  if (!client) {
     client = await MongoClient.connect(mongoUri);
-    await client.connect();
+  }
+  return client;
+};
+
+export const getFeed = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    client = await getMongoClient();
     const db = client.db("app_data");
     const postsCollection = db.collection("posts");
 
-    const posts = await postsCollection.find().limit(50).toArray();
+    const posts = await postsCollection
+      .find()
+      .sort({ timestamp: -1 }) // Sort by 'timestamp' field in descending order to get the most recent posts first
+      .limit(50) // Limit to 50 posts
+      .toArray();
 
     res.json({ feed: posts });
   } catch (error) {

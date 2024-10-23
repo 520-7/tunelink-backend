@@ -56,9 +56,9 @@ export const uploadFileToGridFS = async (filename, buffer, bucketName) => {
 
 export const uploadPost = async (req, res) => {
   try {
-    const { ownerUser, likesCount, timestamp, caption, outLinks } = req.body;
+    const { ownerUser, likesCount, caption, outLinks } = req.body;
 
-    if (!ownerUser || !timestamp || !caption) {
+    if (!ownerUser || !caption) {
       return res
         .status(400)
         .json({ message: "Missing required post metadata." });
@@ -72,18 +72,20 @@ export const uploadPost = async (req, res) => {
     let postDocument = {
       ownerUser: ObjectId.createFromHexString(ownerUser),
       likesCount: parseInt(likesCount, 10) || 0,
-      timestamp: new Date(timestamp),
+      timestamp: new Date(),
       albumCoverUrl: "",
       audioUrl: "",
       caption,
       outLinks: outLinks || {},
     };
 
+    // console.log(req.files);
+
     // Check if albumCover file is provided and upload it
     if (req.files && req.files.albumCover) {
       postDocument.albumCoverUrl = await uploadFileToGridFS(
-        req.files.albumCover.originalname,
-        req.files.albumCover.buffer,
+        req.files.albumCover[0].originalname,
+        req.files.albumCover[0].buffer,
         POST_IMAGE_BUCKET
       );
     }
@@ -91,8 +93,8 @@ export const uploadPost = async (req, res) => {
     // Check if audio file is provided and upload it
     if (req.files && req.files.audio) {
       postDocument.audioUrl = await uploadFileToGridFS(
-        req.files.audio.originalname,
-        req.files.audio.buffer,
+        req.files.audio[0].originalname,
+        req.files.audio[0].buffer,
         MP3_BUCKET
       );
     }

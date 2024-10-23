@@ -8,6 +8,9 @@ const router = express.Router();
  * /api/feed/get_feed:
  *   post:
  *     summary: Get feed data
+ *     parameters:
+ *       - in: path
+ *         name: fileId
  *     responses:
  *       200:
  *         description: A successful response
