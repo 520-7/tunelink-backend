@@ -5,9 +5,12 @@ const router = express.Router();
 
 /**
  * @swagger
- * /api/get_feed:
+ * /api/feed/get_feed:
  *   post:
- *     summary: Get feed data
+ *     summary: Get feed data, optional pass userId
+ *     parameters:
+ *       - in: path
+ *         name: userId
  *     responses:
  *       200:
  *         description: A successful response
