@@ -31,9 +31,5 @@ export const getFeed = async (req, res) => {
   } catch (error) {
     console.error("Error in /get_feed:", error);
     res.status(500).json({ error: "Internal server error." });
-  } finally {
-    if (client) {
-      await client.close();
-    }
   }
 };

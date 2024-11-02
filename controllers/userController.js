@@ -39,10 +39,6 @@ export const deleteUserById = async (req, res) => {
 
     return res.status(200).json({ message: "User deleted successfully." });
   } catch (error) {
-    // Handle the error if the ObjectId was not valid
-    if (error instanceof Error && error.name === "BSONTypeError") {
-      return res.status(400).json({ message: "Invalid user ID format." });
-    }
     console.error("Error deleting user:", error);
     return res.status(500).json({ message: "Internal Server Error" });
   }
