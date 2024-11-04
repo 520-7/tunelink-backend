@@ -39,6 +39,40 @@ export const getPostById = async (req, res) => {
   }
 };
 
+export const updatePostById = async (req, res) => {
+  // You should only update likesCount usually, will be handled in frontend
+  try {
+    const { postId } = req.params;
+    const updateData = req.body;
+    const id = ObjectId.createFromHexString(postId);
+    const client = await getMongoClient();
+    const db = client.db(DB);
+    const postsCollection = db.collection(POST_BUCKET);
+
+    const filteredUpdateData = {
+      likesCount: updateData.likesCount,
+    }; // Only update likesCount
+
+    const updateResult = await postsCollection.updateOne(
+      { _id: id },
+      { $set: filteredUpdateData }
+    );
+
+    if (updateResult.matchedCount === 0) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    if (updateResult.modifiedCount === 1) {
+      return res.status(200).json({ message: "Post updated successfully" });
+    }
+
+    return res.status(500).json({ message: "Failed to update the post" });
+  } catch (error) {
+    console.error("Error updating post:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 export const deletePostById = async (req, res) => {
   try {
     const { postId } = req.params;

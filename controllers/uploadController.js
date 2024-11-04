@@ -79,8 +79,8 @@ export const uploadPost = async (req, res) => {
       outLinks: outLinks || {},
     };
 
-    console.log(req.body);
-    console.log(req.files);
+    // console.log(req.body);
+    // console.log(req.files);
 
     // Check if albumCover file is provided and upload it
     if (req.files && req.files.albumCover) {
