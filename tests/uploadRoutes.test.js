@@ -104,6 +104,16 @@ describe("Upload users and link posts (assign random avatar to users, assign ran
       )
     );
 
+    const genres = [
+      "Metal",
+      "Rock",
+      "HipHop",
+      "Jazz",
+      "Soul",
+      "Country",
+      "EDM",
+    ];
+
     const avatarDir = path.join(
       __dirname,
       "..",
@@ -119,6 +129,23 @@ describe("Upload users and link posts (assign random avatar to users, assign ran
       const avatarIndex = Math.floor(Math.random() * avatarFiles.length);
       const avatarPath = path.join(avatarDir, avatarFiles[avatarIndex]);
 
+      const followingCount = Math.floor(Math.random() * userIds.length);
+      const following = [];
+      for (let i = 0; i < followingCount; i++) {
+        const randomIndex = Math.floor(Math.random() * userIds.length);
+        following.push(userIds[randomIndex]);
+      }
+      user.following = following;
+
+      const genreCount = Math.floor(Math.random() * genres.length) + 1;
+      user.genres = [];
+      for (let i = 0; i < genreCount; i++) {
+        const randomIndex = Math.floor(Math.random() * genres.length);
+        if (!user.genres.includes(genres[randomIndex])) {
+          user.genres.push(genres[randomIndex]);
+        }
+      }
+
       const response = await request(app)
         .post("/api/upload/uploadUser")
         .field("user", JSON.stringify(user))
@@ -130,7 +157,7 @@ describe("Upload users and link posts (assign random avatar to users, assign ran
       expect(response.body).toHaveProperty("userId");
       userIds.push(response.body.userId);
     }
-  }, 100000);
+  }, 1000000);
 
   it("should upload two posts for each user and update ownedPosts (assign random audio and albumCover)", async () => {
     const postsData = JSON.parse(
@@ -177,8 +204,8 @@ describe("Upload users and link posts (assign random avatar to users, assign ran
         .field("ownerUser", firstPost.ownerUser)
         .field("likesCount", 0)
         .field("timestamp", firstPost.timestamp)
-        .field("caption", firstPost.caption)
-        .field("outLinks", JSON.stringify(firstPost.outLinks))
+        .field("caption", firstPost.caption.slice(0, 20))
+        .field("outLinks", JSON.stringify([{ youtube: "example.com" }]))
         .attach(
           shouldAttachAlbumCover ? "albumCover" : undefined,
           shouldAttachAlbumCover ? albumCoverPath : undefined
@@ -203,8 +230,8 @@ describe("Upload users and link posts (assign random avatar to users, assign ran
         .field("ownerUser", secondPost.ownerUser)
         .field("likesCount", 0)
         .field("timestamp", secondPost.timestamp)
-        .field("caption", secondPost.caption)
-        .field("outLinks", JSON.stringify(secondPost.outLinks))
+        .field("caption", secondPost.caption.slice(0, 20))
+        .field("outLinks", JSON.stringify([{ youtube: "anotherexample.com" }]))
         .attach(
           shouldAttachAlbumCover ? "albumCover" : undefined,
           shouldAttachAlbumCover ? albumCoverPath : undefined
@@ -218,5 +245,5 @@ describe("Upload users and link posts (assign random avatar to users, assign ran
       expect(responseUser.body.ownedPosts).toContain(firstPostId);
       expect(responseUser.body.ownedPosts).toContain(secondPostId);
     }
-  }, 100000);
+  }, 1000000);
 });

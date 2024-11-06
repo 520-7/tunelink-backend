@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -13,6 +13,47 @@ const getMongoClient = async () => {
   }
   return client;
 };
+
+export const getFeedPost = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    client = await getMongoClient();
+    const db = client.db("app_data");
+    const usersCollection = db.collection("users");
+    const postsCollection = db.collection("posts");
+
+    const objId = ObjectId.createFromHexString(userId);
+
+    const user = await usersCollection.findOne({ _id: objId });
+    const following = user.following;
+
+    let query;
+    const randomPercentage = Math.random() * 100;
+
+    if (randomPercentage <= 80) {
+      query = {
+        ownerUser: { $in: following },
+      };
+    } else {
+      query = {
+        ownerUser: { $nin: following },
+      };
+    }
+
+    const post = await getRandomPost(postsCollection, query);
+
+    res.json(post);
+  } catch (error) {
+    console.error("Failed to get feed post:", error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+async function getRandomPost(collection, query) {
+  const posts = await collection.find(query).toArray();
+  const randomIndex = Math.floor(Math.random() * posts.length);
+  return posts[randomIndex];
+}
 
 export const getFeed = async (req, res) => {
   try {

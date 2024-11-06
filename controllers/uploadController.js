@@ -70,13 +70,14 @@ export const uploadPost = async (req, res) => {
     const usersCollection = db.collection(USER_BUCKET);
 
     let postDocument = {
-      ownerUser: ObjectId.createFromHexString(ownerUser),
+      // ownerUser: ObjectId.createFromHexString(ownerUser),
+      ownerUser,
       likesCount: parseInt(likesCount, 10) || 0,
       timestamp: new Date(),
       albumCoverUrl: "",
       audioUrl: "",
       caption,
-      outLinks: outLinks || {},
+      outLinks: outLinks || [],
     };
 
     // console.log(req.body);
