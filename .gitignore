@@ -1,2 +1,6 @@
 node_modules/
 .env
+data/mp3/
+data/dummy/
+data/test_data
+.DS_Store
