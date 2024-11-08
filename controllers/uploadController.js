@@ -1,12 +1,13 @@
 import { MongoClient, GridFSBucket, ObjectId } from "mongodb";
 import dotenv from "dotenv";
+import { getMongoClient } from "./mongo.js";
 
 dotenv.config();
 
-const mongoUri = process.env.MONGO_CONNECTION_STRING;
+// const mongoUri = process.env.MONGO_CONNECTION_STRING;
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 
-let client;
+// let client;
 
 const DB = "app_data";
 const USER_BUCKET = "users";
@@ -15,12 +16,12 @@ const USER_AVATAR_BUCKET = "user_avatars";
 const POST_BUCKET = "posts";
 const POST_IMAGE_BUCKET = "post_images";
 
-const getMongoClient = async () => {
-  if (!client) {
-    client = await MongoClient.connect(mongoUri);
-  }
-  return client;
-};
+// const getMongoClient = async () => {
+//   if (!client) {
+//     client = await MongoClient.connect(mongoUri);
+//   }
+//   return client;
+// };
 
 /**
  * Uploads a file to GridFS.

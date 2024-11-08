@@ -1,23 +1,24 @@
 import { MongoClient, GridFSBucket, ObjectId } from "mongodb";
 import dotenv from "dotenv";
+import { getMongoClient } from "./mongo.js";
 
 dotenv.config();
 
-const mongoUri = process.env.MONGO_CONNECTION_STRING;
+// const mongoUri = process.env.MONGO_CONNECTION_STRING;
 
-let client;
+// let client;
 
 const DB = "app_data";
 const MP3_BUCKET = "audio_files";
 const POST_BUCKET = "posts";
 const POST_IMAGE_BUCKET = "post_images";
 
-const getMongoClient = async () => {
-  if (!client) {
-    client = await MongoClient.connect(mongoUri);
-  }
-  return client;
-};
+// const getMongoClient = async () => {
+//   if (!client) {
+//     client = await MongoClient.connect(mongoUri);
+//   }
+//   return client;
+// };
 
 export const getPostById = async (req, res) => {
   try {

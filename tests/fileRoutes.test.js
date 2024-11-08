@@ -60,10 +60,7 @@ describe("Upload users and posts, and perform GET on Files", () => {
       const response = await request(app)
         .post("/api/upload/uploadUser")
         .field("user", JSON.stringify(user))
-        .attach(
-          shouldAttachAvatar ? "userAvatar" : undefined,
-          shouldAttachAvatar ? avatarPath : undefined
-        );
+        .attach("userAvatar", avatarPath);
       expect(response.status).toBe(201);
       expect(response.body).toHaveProperty("userId");
       userIds.push(response.body.userId);
@@ -117,10 +114,7 @@ describe("Upload users and posts, and perform GET on Files", () => {
         .field("timestamp", firstPost.timestamp)
         .field("caption", firstPost.caption)
         .field("outLinks", JSON.stringify(firstPost.outLinks))
-        .attach(
-          shouldAttachAlbumCover ? "albumCover" : undefined,
-          shouldAttachAlbumCover ? albumCoverPath : undefined
-        )
+        .attach("albumCover", albumCoverPath)
         .attach("audio", audioPath);
       expect(responseFirstPost.status).toBe(201);
       const firstPostId = responseFirstPost.body.postId;
@@ -143,10 +137,7 @@ describe("Upload users and posts, and perform GET on Files", () => {
         .field("timestamp", secondPost.timestamp)
         .field("caption", secondPost.caption)
         .field("outLinks", JSON.stringify(secondPost.outLinks))
-        .attach(
-          shouldAttachAlbumCover ? "albumCover" : undefined,
-          shouldAttachAlbumCover ? albumCoverPath : undefined
-        )
+        .attach("albumCover", albumCoverPath)
         .attach("audio", audioPath);
       expect(responseSecondPost.status).toBe(201);
       const secondPostId = responseSecondPost.body.postId;
@@ -168,7 +159,7 @@ describe("Upload users and posts, and perform GET on Files", () => {
       expect(response.body._id).toBe(userId);
       const avatarId = response.body.userAvatarUrl;
 
-      if (avatarId !== undefined || avatarId !== "") {
+      if (avatarId.length !== 0 || avatarId !== undefined || avatarId !== "") {
         const responseFromGet = await request(app).get(
           `/api/files/userAvatar/${avatarId}`
         );
@@ -186,7 +177,11 @@ describe("Upload users and posts, and perform GET on Files", () => {
       expect(response.body._id).toBe(postId);
       const albumCoverId = response.body.albumCoverUrl;
 
-      if (albumCoverId !== undefined || albumCoverId !== "") {
+      if (
+        albumCoverId.length !== 0 ||
+        albumCoverId !== undefined ||
+        albumCoverId !== ""
+      ) {
         const response = await request(app).get(
           `/api/files/albumCover/${albumCoverId}`
         );

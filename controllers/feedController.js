@@ -1,18 +1,19 @@
 import { MongoClient, ObjectId } from "mongodb";
 import dotenv from "dotenv";
+import { getMongoClient } from "./mongo.js";
 
 dotenv.config();
 
-const mongoUri = process.env.MONGO_CONNECTION_STRING;
+// const mongoUri = process.env.MONGO_CONNECTION_STRING;
 
-let client;
+// let client;
 
-const getMongoClient = async () => {
-  if (!client) {
-    client = await MongoClient.connect(mongoUri);
-  }
-  return client;
-};
+// const getMongoClient = async () => {
+//   if (!client) {
+//     client = await MongoClient.connect(mongoUri);
+//   }
+//   return client;
+// };
 
 export const getFeedPost = async (req, res) => {
   try {
