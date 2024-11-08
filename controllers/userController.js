@@ -2,23 +2,24 @@ import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
 import { uploadFileToGridFS } from "./uploadController.js";
 import { ObjectId } from "mongodb";
+import { getMongoClient } from "./mongo.js";
 
 dotenv.config();
 
-const mongoUri = process.env.MONGO_CONNECTION_STRING;
+// const mongoUri = process.env.MONGO_CONNECTION_STRING;
 
-let client;
+// let client;
 
 const DB = "app_data";
 const USER_BUCKET = "users";
 const USER_AVATAR_BUCKET = "user_avatars";
 
-const getMongoClient = async () => {
-  if (!client) {
-    client = await MongoClient.connect(mongoUri);
-  }
-  return client;
-};
+// const getMongoClient = async () => {
+//   if (!client) {
+//     client = await MongoClient.connect(mongoUri);
+//   }
+//   return client;
+// };
 
 export const deleteUserById = async (req, res) => {
   try {

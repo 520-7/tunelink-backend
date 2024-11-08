@@ -4,27 +4,12 @@ import fs from "fs";
 import path from "path";
 import archiver from "archiver";
 import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-dotenv.config();
-
-const mongoUri = process.env.MONGO_CONNECTION_STRING;
-
-let client;
+import { getMongoClient } from "./mongo.js";
 
 const DB = "app_data";
 const MP3_BUCKET = "audio_files";
 const POST_IMAGE_BUCKET = "post_images";
 const USER_AVATAR_BUCKET = "user_avatars";
-
-const getMongoClient = async () => {
-  if (!client) {
-    client = await MongoClient.connect(mongoUri);
-  }
-  return client;
-};
 
 const streamFileToResponse = (bucket, fileId, res, contentType) => {
   return new Promise((resolve, reject) => {
@@ -36,7 +21,7 @@ const streamFileToResponse = (bucket, fileId, res, contentType) => {
     downloadStream.pipe(res);
 
     downloadStream.on("error", (error) => {
-      res.status(404).send("File not found");
+      res.status(404).send(`${fileId} File not found`);
       reject(error);
     });
 
@@ -45,6 +30,7 @@ const streamFileToResponse = (bucket, fileId, res, contentType) => {
     });
   });
 };
+
 export const getUserAvatar = async (req, res) => {
   try {
     const { fileId } = req.params;
