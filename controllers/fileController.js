@@ -45,27 +45,41 @@ const streamFileToResponse = (bucket, fileId, res, contentType) => {
     });
   });
 };
-
 export const getUserAvatar = async (req, res) => {
-  const { fileId } = req.params;
-  const client = await getMongoClient();
-  const db = client.db(DB);
-  const bucket = new GridFSBucket(db, { bucketName: USER_AVATAR_BUCKET });
-  await streamFileToResponse(bucket, fileId, res, "image/jpeg");
+  try {
+    const { fileId } = req.params;
+    const client = await getMongoClient();
+    const db = client.db(DB);
+    const bucket = new GridFSBucket(db, { bucketName: USER_AVATAR_BUCKET });
+    await streamFileToResponse(bucket, fileId, res, "image/jpeg");
+  } catch (error) {
+    console.error("Error getting user avatar:", error);
+    res.status(500).send("Internal server error");
+  }
 };
 
 export const getAlbumCover = async (req, res) => {
-  const { fileId } = req.params;
-  const client = await getMongoClient();
-  const db = client.db(DB);
-  const bucket = new GridFSBucket(db, { bucketName: POST_IMAGE_BUCKET });
-  await streamFileToResponse(bucket, fileId, res, "image/jpeg");
+  try {
+    const { fileId } = req.params;
+    const client = await getMongoClient();
+    const db = client.db(DB);
+    const bucket = new GridFSBucket(db, { bucketName: POST_IMAGE_BUCKET });
+    await streamFileToResponse(bucket, fileId, res, "image/jpeg");
+  } catch (error) {
+    console.error("Error getting album cover:", error);
+    res.status(500).send("Internal server error");
+  }
 };
 
 export const getAudio = async (req, res) => {
-  const { fileId } = req.params;
-  const client = await getMongoClient();
-  const db = client.db(DB);
-  const bucket = new GridFSBucket(db, { bucketName: MP3_BUCKET });
-  await streamFileToResponse(bucket, fileId, res, "audio/mpeg");
+  try {
+    const { fileId } = req.params;
+    const client = await getMongoClient();
+    const db = client.db(DB);
+    const bucket = new GridFSBucket(db, { bucketName: MP3_BUCKET });
+    await streamFileToResponse(bucket, fileId, res, "audio/mpeg");
+  } catch (error) {
+    console.error("Error getting audio file:", error);
+    res.status(500).send("Internal server error");
+  }
 };
