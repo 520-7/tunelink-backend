@@ -109,3 +109,44 @@ export const readUserById = async (req, res) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+export const readUserByEmail = async (req, res) => {
+  try {
+    const { email } = req.query;
+
+    if (!email) {
+      return res.status(400).json({ message: "Email is required." });
+    }
+
+    const client = await getMongoClient();
+    const db = client.db(DB);
+    const usersCollection = db.collection(USER_BUCKET);
+
+    const user = await usersCollection.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    return res.status(200).json(user);
+  } catch (error) {
+    console.error("Error reading user by email:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const findUserByEmail = async (email) => {
+  try {
+    if (!email) throw new Error("Email is required.");
+
+    const client = await getMongoClient();
+    const db = client.db(DB);
+    const usersCollection = db.collection(USER_BUCKET);
+
+    const user = await usersCollection.findOne({ email });
+    return user;
+  } catch (error) {
+    console.error("Error finding user by email:", error);
+    throw new Error("Internal Server Error");
+  }
+};

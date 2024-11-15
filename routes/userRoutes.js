@@ -3,6 +3,7 @@ import {
   readUserById,
   deleteUserById,
   updateUserById,
+  readUserByEmail,
 } from "../controllers/userController.js";
 
 const router = express.Router();
@@ -104,5 +105,7 @@ router.put("/:userId", updateUserById);
  *         description: Internal Server Error.
  */
 router.get("/:userId", readUserById);
+
+router.get("/email", readUserByEmail);
 
 export default router;

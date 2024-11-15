@@ -127,6 +127,8 @@ export const uploadPost = async (req, res) => {
 export const uploadUser = async (req, res) => {
   try {
     const {
+      email,
+      password,
       userName,
       profileName,
       followerCount,
@@ -147,7 +149,9 @@ export const uploadUser = async (req, res) => {
     const db = client.db(DB);
     const usersCollection = db.collection(USER_BUCKET);
 
-    const existingUser = await usersCollection.findOne({ userName });
+    const existingUser = await usersCollection.findOne({
+      $or: [{ userName }, { email }],
+    });
     if (existingUser) {
       return res
         .status(409)
@@ -164,6 +168,8 @@ export const uploadUser = async (req, res) => {
     }
 
     const newUser = {
+      email,
+      password,
       userAvatarUrl,
       userName,
       profileName,
