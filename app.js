@@ -7,6 +7,7 @@ import uploadRoutes from "./routes/uploadRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import postRoutes from "./routes/postRoute.js";
 import fileRoutes from "./routes/fileRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 import morgan from "morgan";
 
 const app = express();
@@ -41,6 +42,7 @@ app.use("/api/upload", uploadRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/post", postRoutes);
 app.use("/api/files", fileRoutes);
+app.use("/auth", authRoutes);
 
 app.get("/health", (req, res) => {
   res.status(200).send("Server up and running.");

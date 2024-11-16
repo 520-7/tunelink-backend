@@ -40,7 +40,9 @@ describe("Upload users and link posts", () => {
         path.join(__dirname, "..", "data", "test_data", "MOCK_USERS.json")
       )
     );
+
     for (const user of usersData) {
+      user["email"] = user["userName"];
       const response = await request(app)
         .post("/api/upload/uploadUser")
         .send(user);
@@ -125,6 +127,7 @@ describe("Upload users and link posts (assign random avatar to users, assign ran
     const avatarFiles = fs.readdirSync(avatarDir);
 
     for (const user of usersData) {
+      user["email"] = user["userName"];
       const shouldAttachAvatar = Math.random() < 0.8;
       const avatarIndex = Math.floor(Math.random() * avatarFiles.length);
       const avatarPath = path.join(avatarDir, avatarFiles[avatarIndex]);

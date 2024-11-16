@@ -18,7 +18,7 @@ dotenv.config();
 export const getFeedPost = async (req, res) => {
   try {
     const { userId } = req.params;
-    client = await getMongoClient();
+    const client = await getMongoClient();
     const db = client.db("app_data");
     const usersCollection = db.collection("users");
     const postsCollection = db.collection("posts");
@@ -59,7 +59,7 @@ async function getRandomPost(collection, query) {
 export const getFeed = async (req, res) => {
   try {
     const { userId } = req.params;
-    client = await getMongoClient();
+    const client = await getMongoClient();
     const db = client.db("app_data");
     const postsCollection = db.collection("posts");
 
