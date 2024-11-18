@@ -107,4 +107,73 @@ router.put("/:userId", updateUserById);
  *       500:
  *         description: Internal Server Error.
  */
-router.get("/:userId", readUserBy
+router.get("/:userId", readUserById);
+
+router.get("/email", readUserByEmail);
+
+/**
+ * @swagger
+ * /api/user/username/{username}:
+ *   get:
+ *     summary: Reads a user by username
+ *     parameters:
+ *       - in: path
+ *         name: username
+ *         required: true
+ *         type: string
+ *         description: The username of the user to retrieve.
+ *     responses:
+ *       200:
+ *         description: User retrieved successfully.
+ *       404:
+ *         description: User not found.
+ *       500:
+ *         description: Internal Server Error.
+ */
+router.get("/username/:username", readUserByUsername);
+
+/**
+ * @swagger
+ * /api/user/find-by-email/{email}:
+ *   get:
+ *     summary: Finds a user by email
+ *     parameters:
+ *       - in: path
+ *         name: email
+ *         required: true
+ *         type: string
+ *         description: The email of the user to find.
+ *     responses:
+ *       200:
+ *         description: User found successfully.
+ *       404:
+ *         description: User not found.
+ *       500:
+ *         description: Internal Server Error.
+ */
+router.get("/find-by-email/:email", findUserByEmailEndpoint);
+
+/**
+ * @swagger
+ * /api/user/search-by-genre:
+ *   get:
+ *     summary: Searches for users by genre
+ *     parameters:
+ *       - in: query
+ *         name: genre
+ *         required: true
+ *         type: string
+ *         description: The genre to search for.
+ *     responses:
+ *       200:
+ *         description: Users found successfully.
+ *       400:
+ *         description: Genre is required.
+ *       404:
+ *         description: No users found for this genre.
+ *       500:
+ *         description: Internal Server Error.
+ */
+router.get("/search-by-genre", fetchUsersByField);
+
+export default router;
