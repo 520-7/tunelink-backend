@@ -53,6 +53,7 @@ describe("Upload users and posts, and perform CRUD on Posts", () => {
     const avatarFiles = fs.readdirSync(avatarDir);
 
     for (const user of usersData) {
+      user["email"] = user["userName"];
       const shouldAttachAvatar = Math.random() < 0.8;
       const avatarIndex = Math.floor(Math.random() * avatarFiles.length);
       const avatarPath = path.join(avatarDir, avatarFiles[avatarIndex]);

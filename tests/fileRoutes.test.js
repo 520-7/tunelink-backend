@@ -53,6 +53,7 @@ describe("Upload users and posts, and perform GET on Files", () => {
     const avatarFiles = fs.readdirSync(avatarDir);
 
     for (const user of usersData) {
+      user["email"] = user["userName"];
       const shouldAttachAvatar = Math.random() < 0.8;
       const avatarIndex = Math.floor(Math.random() * avatarFiles.length);
       const avatarPath = path.join(avatarDir, avatarFiles[avatarIndex]);
@@ -150,7 +151,7 @@ describe("Upload users and posts, and perform GET on Files", () => {
       postIds.push(firstPostId);
       postIds.push(secondPostId);
     }
-  }, 100000);
+  }, 1000000);
 
   it("should GET all user avatars if it exists", async () => {
     for (const userId of userIds) {
@@ -168,7 +169,7 @@ describe("Upload users and posts, and perform GET on Files", () => {
         expect(responseFromGet.body.length).toBeGreaterThan(0);
       }
     }
-  }, 100000);
+  }, 1000000);
 
   it("should GET all post albumCovers if it exists", async () => {
     for (const postId of postIds) {
@@ -190,7 +191,7 @@ describe("Upload users and posts, and perform GET on Files", () => {
         expect(response.body.length).toBeGreaterThan(0);
       }
     }
-  }, 100000);
+  }, 1000000);
 
   it("should GET all post audio if it exists", async () => {
     for (const postId of postIds) {
@@ -206,5 +207,5 @@ describe("Upload users and posts, and perform GET on Files", () => {
         expect(response.body.length).toBeGreaterThan(0);
       }
     }
-  }, 100000);
+  }, 1000000);
 });

@@ -39,7 +39,7 @@ router.post("/signup", upload.single("userAvatar"), async (req, res) => {
       ownedPosts,
     } = req.body;
 
-    console.log(JSON.stringify(req.body));
+    // console.log(JSON.stringify(req.body));
 
     if (!email || !password || !userName || !profileName) {
       return res.status(400).json({

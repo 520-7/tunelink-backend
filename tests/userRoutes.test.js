@@ -41,6 +41,7 @@ describe("Upload users and Perform CRUD", () => {
       )
     );
     for (const user of usersData) {
+      user["email"] = user["userName"];
       const response = await request(app)
         .post("/api/upload/uploadUser")
         .send(user);
