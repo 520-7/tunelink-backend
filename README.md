@@ -1,5 +1,25 @@
 # tunelink-backend
 A node.js with express server
+
+## Folder Structure  
+
+The backend repository is organized as follows:
+
+- **`/config`**: Contains configuration files for the application, such as database connections or middleware settings.  
+- **`/controllers`**: Houses the logic for handling incoming requests and connecting them to the appropriate services.  
+- **`/data`**: Stores test data, including JSON files and other resources, used for populating the database during development or testing.  
+- **`/routes`**: Defines the API endpoints for user, post, and other core functionalities.  
+- **`/services`**: Contains reusable service modules for tasks like database operations or recommendation logic.  
+- **`/tests`**: Includes test suites for validating the backend functionality.  
+- **`.env.copy`**: A template for environment variables required by the application.  
+- **`.gitignore`**: Specifies files and directories to be ignored by Git.  
+- **`README.md`**: Documentation for setting up and using the backend.  
+- **`app.js`**: Main application file that initializes middleware and sets up the core app logic.  
+- **`example.js`**: Example script or utility for demonstrating backend functionality.  
+- **`jest.config.js`**: Configuration file for the Jest testing framework.  
+- **`package.json`**: Contains project metadata and dependencies.  
+- **`server.js`**: Entry point to start the backend server.
+- 
 ## Set up instructions
 
 1. Clone this repository to your work directory
