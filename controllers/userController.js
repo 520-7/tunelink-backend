@@ -48,6 +48,9 @@ export const deleteUserById = async (req, res) => {
 export const updateUserById = async (req, res) => {
   try {
     const { userId } = req.params;
+    console.log("USER ID", userId);
+    console.log("BODY", req.body);
+
     const id = ObjectId.createFromHexString(userId);
     const updateData = req.body;
     delete updateData._id; // Ensure the _id field is not updated
@@ -151,83 +154,85 @@ export const findUserByEmail = async (email) => {
   }
 };
 
-  export const readUserByUsername = async (req, res) => {
-    try {
-      const { username } = req.params;
-  
-      if (!username) {
-        return res.status(400).json({ message: "Username is required." });
-      }
-  
-      const client = await getMongoClient();
-      const db = client.db(DB);
-      const usersCollection = db.collection(USER_BUCKET);
-  
-      const user = await usersCollection.findOne({ userName: username });
-  
-      if (!user) {
-        return res.status(404).json({ message: "User not found." });
-      }
-  
-      return res.status(200).json(user);
-    } catch (error) {
-      console.error("Error reading user by username:", error);
-      return res.status(500).json({ message: "Internal Server Error" });
-    }
-  };
+export const readUserByUsername = async (req, res) => {
+  try {
+    const { username } = req.params;
 
-  export const findUserByEmailEndpoint = async (req, res) => {
-    try {
-      const { email } = req.params;
-  
-      if (!email) {
-        return res.status(400).json({ message: "Email is required." });
-      }
-  
-      const client = await getMongoClient();
-      const db = client.db(DB);
-      const usersCollection = db.collection(USER_BUCKET);
-  
-      const user = await usersCollection.findOne({ email });
-  
-      if (!user) {
-        return res.status(404).json({ message: "User not found." });
-      }
-      return res.status(200).json(user);
-    } catch (error) {
-      console.error("Error finding user by email:", error);
-      return res.status(500).json({ message: "Internal Server Error" });
+    if (!username) {
+      return res.status(400).json({ message: "Username is required." });
     }
-  };
 
-  export const fetchUsersByField = async (req, res) => {
-    try {
-      const { genre } = req.query;
-  
-      if (!genre) {
-        return res.status(400).json({ message: "Genre is required." });
-      }
-  
-      const client = await getMongoClient();
-      const db = client.db(DB);
-      const usersCollection = db.collection(USER_BUCKET);
-  
-      const users = await usersCollection.find({ genres: genre }).toArray();
-  
-      if (users.length === 0) {
-        return res.status(404).json({ message: "No users found for this genre." });
-      }
-  
-      const shuffledUsers = users.sort(() => 0.5 - Math.random());
-        const selectedUsers = shuffledUsers.slice(0, 5);
-        const sanitizedUsers = selectedUsers.map(user => {
-        const { password, email, ...sanitizedUser } = user;
-        return sanitizedUser;
-      });
-  
-      return res.status(200).json(sanitizedUsers);
-    } catch (error) {
-      console.error("Error fetching users by genre:", error);
-      return res.status(500).json({ message: "Internal Server Error" });
+    const client = await getMongoClient();
+    const db = client.db(DB);
+    const usersCollection = db.collection(USER_BUCKET);
+
+    const user = await usersCollection.findOne({ userName: username });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
     }
-  };
+
+    return res.status(200).json(user);
+  } catch (error) {
+    console.error("Error reading user by username:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const findUserByEmailEndpoint = async (req, res) => {
+  try {
+    const { email } = req.params;
+
+    if (!email) {
+      return res.status(400).json({ message: "Email is required." });
+    }
+
+    const client = await getMongoClient();
+    const db = client.db(DB);
+    const usersCollection = db.collection(USER_BUCKET);
+
+    const user = await usersCollection.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+    return res.status(200).json(user);
+  } catch (error) {
+    console.error("Error finding user by email:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const fetchUsersByField = async (req, res) => {
+  try {
+    const { genre } = req.query;
+
+    if (!genre) {
+      return res.status(400).json({ message: "Genre is required." });
+    }
+
+    const client = await getMongoClient();
+    const db = client.db(DB);
+    const usersCollection = db.collection(USER_BUCKET);
+
+    const users = await usersCollection.find({ genres: genre }).toArray();
+
+    if (users.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No users found for this genre." });
+    }
+
+    const shuffledUsers = users.sort(() => 0.5 - Math.random());
+    const selectedUsers = shuffledUsers.slice(0, 5);
+    const sanitizedUsers = selectedUsers.map((user) => {
+      const { password, email, ...sanitizedUser } = user;
+      return sanitizedUser;
+    });
+
+    return res.status(200).json(sanitizedUsers);
+  } catch (error) {
+    console.error("Error fetching users by genre:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};

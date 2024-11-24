@@ -128,17 +128,21 @@ describe("Upload users and link posts (assign random avatar to users, assign ran
 
     for (const user of usersData) {
       user["email"] = user["userName"];
+      user["ownedPosts"] = [];
       const shouldAttachAvatar = Math.random() < 0.8;
       const avatarIndex = Math.floor(Math.random() * avatarFiles.length);
       const avatarPath = path.join(avatarDir, avatarFiles[avatarIndex]);
 
-      const followingCount = Math.floor(Math.random() * userIds.length);
-      const following = [];
-      for (let i = 0; i < followingCount; i++) {
+      const followingCount = Math.min(
+        Math.floor(Math.random() * userIds.length),
+        userIds.length
+      );
+      const following = new Set();
+      while (following.size < followingCount) {
         const randomIndex = Math.floor(Math.random() * userIds.length);
-        following.push(userIds[randomIndex]);
+        following.add(userIds[randomIndex]);
       }
-      user.following = following;
+      user.following = Array.from(following);
 
       const genreCount = Math.floor(Math.random() * genres.length) + 1;
       user.genres = [];

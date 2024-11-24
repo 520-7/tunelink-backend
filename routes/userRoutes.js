@@ -6,7 +6,7 @@ import {
   readUserByEmail,
   readUserByUsername,
   findUserByEmailEndpoint,
-  fetchUsersByField
+  fetchUsersByField,
 } from "../controllers/userController.js";
 
 const router = express.Router();
