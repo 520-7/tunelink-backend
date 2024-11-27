@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 import { uploadFileToGridFS } from "./uploadController.js";
 import { ObjectId } from "mongodb";
 import { getMongoClient } from "./mongo.js";
+import multer from "multer";
+
 
 dotenv.config();
 
@@ -13,6 +15,7 @@ dotenv.config();
 const DB = "app_data";
 const USER_BUCKET = "users";
 const USER_AVATAR_BUCKET = "user_avatars";
+const storage = multer.memoryStorage();
 
 // const getMongoClient = async () => {
 //   if (!client) {
@@ -52,13 +55,26 @@ export const updateUserById = async (req, res) => {
     const updateData = req.body;
     delete updateData._id; // Ensure the _id field is not updated
 
+    // Parse `genres` field if it's present
+    if (updateData.genres) {
+      try {
+        updateData.genres = JSON.parse(updateData.genres); // Convert it back to an array
+      } catch (error) {
+        console.error("Failed to parse genres:", error);
+        return res.status(400).json({ message: "Invalid genres format." });
+      }
+    }
+
     const client = await getMongoClient();
     const db = client.db(DB);
     const usersCollection = db.collection(USER_BUCKET);
 
-    // Check if a userAvatar file is included in the request and upload it
-    let userAvatarUrl;
+    // Handle user avatar update
+    let userAvatarUrl = "";
+    console.log("File received:", req.file);
+
     if (req.file) {
+      console.log('avatar being updated')
       userAvatarUrl = await uploadFileToGridFS(
         req.file.originalname,
         req.file.buffer,
@@ -87,6 +103,7 @@ export const updateUserById = async (req, res) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
 
 export const readUserById = async (req, res) => {
   try {
