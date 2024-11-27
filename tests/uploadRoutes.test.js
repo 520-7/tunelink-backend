@@ -217,7 +217,9 @@ describe("Upload users and link posts (assign random avatar to users, assign ran
           shouldAttachAlbumCover ? "albumCover" : undefined,
           shouldAttachAlbumCover ? albumCoverPath : undefined
         )
-        .attach("audio", audioPath);
+        .attach("audio", audioPath, {
+          contentType: "audio/mpeg",
+        });
       expect(responseFirstPost.status).toBe(201);
       const firstPostId = responseFirstPost.body.postId;
 
@@ -243,7 +245,9 @@ describe("Upload users and link posts (assign random avatar to users, assign ran
           shouldAttachAlbumCover ? "albumCover" : undefined,
           shouldAttachAlbumCover ? albumCoverPath : undefined
         )
-        .attach("audio", audioPath);
+        .attach("audio", audioPath, {
+          contentType: "audio/mpeg",
+        });
       expect(responseSecondPost.status).toBe(201);
       const secondPostId = responseSecondPost.body.postId;
 
