@@ -37,7 +37,7 @@ You are ready to run the backend
 2. You can navigate to `localhost:3000/health` to check health status of the server
 
 ## Routes
-- `localhost:3000//api-docs`
+- `localhost:3000/api-docs`
     - An interactive api documentation page that lists available routes
     - Useful for development
     - The routes to update (PUT) a user does not work on swagger
