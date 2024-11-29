@@ -8,6 +8,26 @@ import {
   findUserByEmailEndpoint,
   fetchUsersByField,
 } from "../controllers/userController.js";
+import { uploadFileToGridFS } from "../controllers/uploadController.js";
+import dotenv from "dotenv";
+import multer from "multer";
+
+dotenv.config();
+
+
+const storage = multer.memoryStorage();
+const upload = multer({
+  storage,
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB limit
+});
+
+const DB = "app_data";
+const USER_BUCKET = "users";
+const MP3_BUCKET = "audio_files";
+const USER_AVATAR_BUCKET = "user_avatars";
+const POST_BUCKET = "posts";
+const POST_IMAGE_BUCKET = "post_images";
+
 
 const router = express.Router();
 
@@ -86,7 +106,7 @@ router.delete("/:userId", deleteUserById);
  *         description: Internal Server Error.
  */
 // Swagger for this route has no body, will not work while using swagger, you can test on postman
-router.put("/:userId", updateUserById);
+router.put("/:userId", upload.single("userAvatar"), updateUserById);
 
 /**
  * @swagger
