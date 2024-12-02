@@ -83,4 +83,19 @@ describe("Upload users and Perform CRUD", () => {
       expect(responseFromGet.status).toBe(404);
     }
   }, 1000000);
+
+it("should search for users by genre", async () => {
+  // Assuming that at least one user has the genre "rock"
+  const response = await request(app)
+    .get("/api/user/search-by-genre?genre=Rock")
+    .expect("Content-Type", /json/)
+    .expect(200);
+
+  // Check that the response contains an array of users
+  expect(Array.isArray(response.body)).toBe(true);
+  
+  // If you have specific expectations about the returned users, you can add more assertions here
+  // For example:
+  // expect(response.body.length).toBeGreaterThan(0); // Ensure at least one user is returned
+}, 1000000);
 });

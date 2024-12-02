@@ -222,9 +222,11 @@ export const findUserByEmailEndpoint = async (req, res) => {
 
 export const fetchUsersByField = async (req, res) => {
   try {
+    console.log("Query params received:", req.query);
     const { genre } = req.query;
 
     if (!genre) {
+      console.log("Genre missing in request.");
       return res.status(400).json({ message: "Genre is required." });
     }
 
@@ -233,6 +235,7 @@ export const fetchUsersByField = async (req, res) => {
     const usersCollection = db.collection(USER_BUCKET);
 
     const users = await usersCollection.find({ genres: genre }).toArray();
+    console.log("Users found for genre:", users);
 
     if (users.length === 0) {
       return res
@@ -246,10 +249,8 @@ export const fetchUsersByField = async (req, res) => {
       const { password, email, ...sanitizedUser } = user;
       return sanitizedUser;
     });
-
-    return res.status(200).json(sanitizedUsers);
   } catch (error) {
-    console.error("Error fetching users by genre:", error);
+    console.error("Error in fetchUsersByField:", error);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };

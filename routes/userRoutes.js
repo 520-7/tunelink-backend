@@ -11,6 +11,8 @@ import {
 import { uploadFileToGridFS } from "../controllers/uploadController.js";
 import dotenv from "dotenv";
 import multer from "multer";
+import userRoutes from './routes/userRoutes.js'; 
+
 
 dotenv.config();
 
@@ -28,8 +30,41 @@ const USER_AVATAR_BUCKET = "user_avatars";
 const POST_BUCKET = "posts";
 const POST_IMAGE_BUCKET = "post_images";
 
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(express.json()); // For parsing application/json
+
+app.use('/api/user', userRoutes);
+
+app.listen(PORT, () => {
+    console.log(`Server is running at http://localhost:${PORT}`);
+  });
 
 const router = express.Router();
+
+/**
+ * @swagger
+ * /api/user/search-by-genre:
+ *   get:
+ *     summary: Searches for users by genre
+ *     parameters:
+ *       - in: query
+ *         name: genre
+ *         required: true
+ *         type: string
+ *         description: The genre to search for.
+ *     responses:
+ *       200:
+ *         description: Users found successfully.
+ *       400:
+ *         description: Genre is required.
+ *       404:
+ *         description: No users found for this genre.
+ *       500:
+ *         description: Internal Server Error.
+ */
+router.get("/search-by-genre", fetchUsersByField);
 
 /**
  * @swagger
@@ -173,27 +208,6 @@ router.get("/username/:username", readUserByUsername);
  */
 router.get("/find-by-email/:email", findUserByEmailEndpoint);
 
-/**
- * @swagger
- * /api/user/search-by-genre:
- *   get:
- *     summary: Searches for users by genre
- *     parameters:
- *       - in: query
- *         name: genre
- *         required: true
- *         type: string
- *         description: The genre to search for.
- *     responses:
- *       200:
- *         description: Users found successfully.
- *       400:
- *         description: Genre is required.
- *       404:
- *         description: No users found for this genre.
- *       500:
- *         description: Internal Server Error.
- */
-router.get("/search-by-genre", fetchUsersByField);
+
 
 export default router;
