@@ -11,35 +11,14 @@ import {
 import { uploadFileToGridFS } from "../controllers/uploadController.js";
 import dotenv from "dotenv";
 import multer from "multer";
-import userRoutes from './routes/userRoutes.js'; 
-
 
 dotenv.config();
-
 
 const storage = multer.memoryStorage();
 const upload = multer({
   storage,
   limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB limit
 });
-
-const DB = "app_data";
-const USER_BUCKET = "users";
-const MP3_BUCKET = "audio_files";
-const USER_AVATAR_BUCKET = "user_avatars";
-const POST_BUCKET = "posts";
-const POST_IMAGE_BUCKET = "post_images";
-
-const app = express();
-const PORT = process.env.PORT || 3000;
-
-app.use(express.json()); // For parsing application/json
-
-app.use('/api/user', userRoutes);
-
-app.listen(PORT, () => {
-    console.log(`Server is running at http://localhost:${PORT}`);
-  });
 
 const router = express.Router();
 
@@ -207,7 +186,5 @@ router.get("/username/:username", readUserByUsername);
  *         description: Internal Server Error.
  */
 router.get("/find-by-email/:email", findUserByEmailEndpoint);
-
-
 
 export default router;

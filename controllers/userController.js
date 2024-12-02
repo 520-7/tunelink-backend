@@ -5,7 +5,6 @@ import { ObjectId } from "mongodb";
 import { getMongoClient } from "./mongo.js";
 import multer from "multer";
 
-
 dotenv.config();
 
 // const mongoUri = process.env.MONGO_CONNECTION_STRING;
@@ -77,7 +76,7 @@ export const updateUserById = async (req, res) => {
     console.log("File received:", req.file);
 
     if (req.file) {
-      console.log('avatar being updated')
+      console.log("avatar being updated");
       userAvatarUrl = await uploadFileToGridFS(
         req.file.originalname,
         req.file.buffer,
@@ -106,7 +105,6 @@ export const updateUserById = async (req, res) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
-
 
 export const readUserById = async (req, res) => {
   try {
@@ -234,14 +232,16 @@ export const fetchUsersByField = async (req, res) => {
     const db = client.db(DB);
     const usersCollection = db.collection(USER_BUCKET);
 
-    const users = await usersCollection.find({ genres: genre }).toArray();
-    console.log("Users found for genre:", users);
-
-    if (users.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "No users found for this genre." });
-    }
+    const users = await usersCollection
+      .find({ genres: { $regex: new RegExp(genre, "i") } })
+      .toArray();
+    // console.log("Users found for genre:", users); too long
+    // It is ok to return an empty array if no users are found for the genre
+    // if (users.length === 0) {
+    //   return res
+    //     .status(404)
+    //     .json({ message: "No users found for this genre." });
+    // }
 
     const shuffledUsers = users.sort(() => 0.5 - Math.random());
     const selectedUsers = shuffledUsers.slice(0, 5);
@@ -249,6 +249,7 @@ export const fetchUsersByField = async (req, res) => {
       const { password, email, ...sanitizedUser } = user;
       return sanitizedUser;
     });
+    return res.status(200).json(sanitizedUsers);
   } catch (error) {
     console.error("Error in fetchUsersByField:", error);
     return res.status(500).json({ message: "Internal Server Error" });

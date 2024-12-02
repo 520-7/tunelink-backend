@@ -35,6 +35,16 @@ describe("Upload users and Perform CRUD", () => {
   });
 
   it("should upload all users and return their userIds", async () => {
+    const genres = [
+      "Metal",
+      "Rock",
+      "HipHop",
+      "Jazz",
+      "Soul",
+      "Country",
+      "EDM",
+    ];
+
     const usersData = JSON.parse(
       fs.readFileSync(
         path.join(__dirname, "..", "data", "test_data", "MOCK_USERS.json")
@@ -42,6 +52,15 @@ describe("Upload users and Perform CRUD", () => {
     );
     for (const user of usersData) {
       user["email"] = user["userName"];
+      const genreCount = Math.floor(Math.random() * genres.length) + 1;
+      user.genres = [];
+      for (let i = 0; i < genreCount; i++) {
+        const randomIndex = Math.floor(Math.random() * genres.length);
+        if (!user.genres.includes(genres[randomIndex])) {
+          user.genres.push(genres[randomIndex]);
+        }
+      }
+
       const response = await request(app)
         .post("/api/upload/uploadUser")
         .send(user);
@@ -57,6 +76,27 @@ describe("Upload users and Perform CRUD", () => {
       const response = await request(app).get(`/api/user/${userId}`);
       expect(response.status).toBe(200);
       expect(response.body._id).toBe(userId);
+    }
+  }, 1000000);
+
+  it("should search for users by genre", async () => {
+    const genres = [
+      "Metal",
+      "Rock",
+      "HipHop",
+      "Jazz",
+      "Soul",
+      "Country",
+      "EDM",
+    ];
+
+    for (const genre of genres) {
+      const response = await request(app)
+        .get(`/api/user/search-by-genre?genre=${genre}`)
+        .expect("Content-Type", /json/)
+        .expect(200);
+      expect(Array.isArray(response.body)).toBe(true);
+      expect(response.body.length).toBeGreaterThan(0); // might fail very rarely, depends on random
     }
   }, 1000000);
 
@@ -84,18 +124,5 @@ describe("Upload users and Perform CRUD", () => {
     }
   }, 1000000);
 
-it("should search for users by genre", async () => {
-  // Assuming that at least one user has the genre "rock"
-  const response = await request(app)
-    .get("/api/user/search-by-genre?genre=Rock")
-    .expect("Content-Type", /json/)
-    .expect(200);
-
-  // Check that the response contains an array of users
-  expect(Array.isArray(response.body)).toBe(true);
-  
-  // If you have specific expectations about the returned users, you can add more assertions here
-  // For example:
-  // expect(response.body.length).toBeGreaterThan(0); // Ensure at least one user is returned
-}, 1000000);
+  // don't do tests after deleting all users
 });
