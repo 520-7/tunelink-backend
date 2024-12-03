@@ -220,8 +220,8 @@ export const findUserByEmailEndpoint = async (req, res) => {
 
 export const fetchUsersByField = async (req, res) => {
   try {
-    console.log("Query params received:", req.query);
-    const { genre } = req.query;
+    console.log("Query params received:", req.params);
+    const { genre } = req.params;
 
     if (!genre) {
       console.log("Genre missing in request.");

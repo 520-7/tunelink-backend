@@ -43,7 +43,7 @@ const router = express.Router();
  *       500:
  *         description: Internal Server Error.
  */
-router.get("/search-by-genre", fetchUsersByField);
+router.get("/search-by-genre/:genre", fetchUsersByField);
 
 /**
  * @swagger

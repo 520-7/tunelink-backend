@@ -92,7 +92,7 @@ describe("Upload users and Perform CRUD", () => {
 
     for (const genre of genres) {
       const response = await request(app)
-        .get(`/api/user/search-by-genre?genre=${genre}`)
+        .get(`/api/user/search-by-genre/${genre}`)
         .expect("Content-Type", /json/)
         .expect(200);
       expect(Array.isArray(response.body)).toBe(true);
