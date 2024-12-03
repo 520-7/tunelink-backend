@@ -14,22 +14,36 @@ import multer from "multer";
 
 dotenv.config();
 
-
 const storage = multer.memoryStorage();
 const upload = multer({
   storage,
   limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB limit
 });
 
-const DB = "app_data";
-const USER_BUCKET = "users";
-const MP3_BUCKET = "audio_files";
-const USER_AVATAR_BUCKET = "user_avatars";
-const POST_BUCKET = "posts";
-const POST_IMAGE_BUCKET = "post_images";
-
-
 const router = express.Router();
+
+/**
+ * @swagger
+ * /api/user/search-by-genre:
+ *   get:
+ *     summary: Searches for users by genre
+ *     parameters:
+ *       - in: query
+ *         name: genre
+ *         required: true
+ *         type: string
+ *         description: The genre to search for.
+ *     responses:
+ *       200:
+ *         description: Users found successfully.
+ *       400:
+ *         description: Genre is required.
+ *       404:
+ *         description: No users found for this genre.
+ *       500:
+ *         description: Internal Server Error.
+ */
+router.get("/search-by-genre", fetchUsersByField);
 
 /**
  * @swagger
@@ -172,28 +186,5 @@ router.get("/username/:username", readUserByUsername);
  *         description: Internal Server Error.
  */
 router.get("/find-by-email/:email", findUserByEmailEndpoint);
-
-/**
- * @swagger
- * /api/user/search-by-genre:
- *   get:
- *     summary: Searches for users by genre
- *     parameters:
- *       - in: query
- *         name: genre
- *         required: true
- *         type: string
- *         description: The genre to search for.
- *     responses:
- *       200:
- *         description: Users found successfully.
- *       400:
- *         description: Genre is required.
- *       404:
- *         description: No users found for this genre.
- *       500:
- *         description: Internal Server Error.
- */
-router.get("/search-by-genre", fetchUsersByField);
 
 export default router;
