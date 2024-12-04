@@ -27,7 +27,11 @@ The backend repository is organized as follows:
 3. Run `npm i`, this will install all required packages for the backend
 4. Create a `.env` at root and copy contents of `.env.copy` into there, message on groupchat to get secrets, or remind ozel to email you, or download on provided drive link.
 5. Remind Ozel to give you access to mongodb, not required but it is helpful, for development purposes.
-6. Navigate to `data/`, there should be a test_data.zip, unzip it, now the path should be `data/test_data`, inside of it there are three directories and to json files. You must populate the `test_audio` with your own audio files, compressed mp3 files get corrupted when uploaded. Just one audio file is required, but you can add more. The ideal amount is 3 this is enough for testing.
+6. Navigate to `data/`
+7. Unzip `test_data.zip`.
+8. Remove contents of `test_audio` directory.
+9. Go to `https://drive.google.com/drive/folders/1vvtAXnvMvA6ErBT0sbgSsn79shp8YUKL?usp=sharing` to download uncompressed audio files, place them in `test_audio` directory.
+10. You can add more files if you want, but should be uncompressed.
 
 You are ready to run the backend
 
@@ -82,7 +86,7 @@ You are ready to run the backend
 - Run `npm test -- tests/uploadRoutes.test.js` to run tests that will populate the database
 
 ## Tests
-- Unzip the testing_data.zip, it should be in the data directory
+- Please read the set up instructions, to make sure you have the test data.
 - I suggest running test individually, mongo has to drop the database between each run, when they all run together it fails some tests because of not waiting for drop, in individual runs there are no errors.
 - Run `npm test -- tests/uploadRoutes.test.js` to run individual test suites defined in `/tests`.
 - You can also use Postman for api testing.
