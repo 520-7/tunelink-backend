@@ -24,6 +24,7 @@ const getMongoClient = async () => {
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+// test for uploading users and performing CRUD operations on them
 describe("Upload users and Perform CRUD", () => {
   let userIds = [];
 
@@ -34,6 +35,7 @@ describe("Upload users and Perform CRUD", () => {
     await client.db(DB).dropDatabase();
   });
 
+  // test for uploading all users and returning their userIds
   it("should upload all users and return their userIds", async () => {
     const genres = [
       "Metal",
@@ -71,6 +73,7 @@ describe("Upload users and Perform CRUD", () => {
     }
   }, 100000);
 
+  // test for getting all users
   it("should GET all users", async () => {
     for (const userId of userIds) {
       const response = await request(app).get(`/api/user/${userId}`);
@@ -79,6 +82,7 @@ describe("Upload users and Perform CRUD", () => {
     }
   }, 1000000);
 
+  // test for searching for users by genre
   it("should search for users by genre", async () => {
     const genres = [
       "Metal",
@@ -100,6 +104,7 @@ describe("Upload users and Perform CRUD", () => {
     }
   }, 1000000);
 
+  // test for updating all users
   it("should PUT all users", async () => {
     for (const userId of userIds) {
       const responseFromPut = await request(app)
@@ -114,6 +119,7 @@ describe("Upload users and Perform CRUD", () => {
     }
   }, 1000000);
 
+  // test for deleting all users
   it("should DELETE all users", async () => {
     for (const userId of userIds) {
       const response = await request(app).delete(`/api/user/${userId}`);

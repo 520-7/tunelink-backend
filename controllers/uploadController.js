@@ -31,15 +31,19 @@ const POST_IMAGE_BUCKET = "post_images";
  */
 export const uploadFileToGridFS = async (filename, buffer, bucketName) => {
   try {
+    // get the mongo client
     const client = await getMongoClient();
     const db = client.db(DB);
 
+    // create a gridfs bucket
     const bucket = new GridFSBucket(db, {
       bucketName: bucketName,
     });
 
+    // create an upload stream
     const uploadStream = bucket.openUploadStream(filename);
 
+    // return a promise that resolves with the file ID in GridFS
     return new Promise((resolve, reject) => {
       uploadStream.end(buffer, (error) => {
         if (error) {
@@ -55,16 +59,19 @@ export const uploadFileToGridFS = async (filename, buffer, bucketName) => {
   }
 };
 
+// upload a post
 export const uploadPost = async (req, res) => {
   try {
     const { ownerUser, likesCount, caption, outLinks } = req.body;
 
+    // if the owner user or caption is not provided, return a 400 error
     if (!ownerUser || !caption) {
       return res
         .status(400)
         .json({ message: "Missing required post metadata." });
     }
 
+    // get the mongo client
     const client = await getMongoClient();
     const db = client.db(DB);
     const postsCollection = db.collection(POST_BUCKET);
@@ -81,10 +88,11 @@ export const uploadPost = async (req, res) => {
       outLinks: outLinks || [],
     };
 
+    // log the request body and files
     // console.log(req.body);
     // console.log(req.files);
 
-    // Check if albumCover file is provided and upload it
+    // check if the album cover file is provided and upload it
     if (req.files && req.files.albumCover) {
       postDocument.albumCoverUrl = await uploadFileToGridFS(
         req.files.albumCover[0].originalname,
@@ -93,7 +101,7 @@ export const uploadPost = async (req, res) => {
       );
     }
 
-    // Check if audio file is provided and upload it
+    // check if the audio file is provided and upload it
     if (req.files && req.files.audio) {
       postDocument.audioUrl = await uploadFileToGridFS(
         req.files.audio[0].originalname,
@@ -102,18 +110,24 @@ export const uploadPost = async (req, res) => {
       );
     }
 
+    // insert the post into the database
     const result = await postsCollection.insertOne(postDocument);
 
+    // get the post id
     const postId = result.insertedId;
+
+    // update the user's owned posts with the new post id
     const updateResult = await usersCollection.updateOne(
       { _id: ObjectId.createFromHexString(ownerUser) },
       { $push: { ownedPosts: postId } }
     );
 
+    // if the user is not found, return a 404 error
     if (updateResult.matchedCount === 0) {
       return res.status(404).json({ message: "User not found." });
     }
 
+    // if the post is created successfully, return a 201 status and a message
     return res.status(201).json({
       message: "Post created successfully",
       postId: result.insertedId.toString(),
@@ -124,6 +138,7 @@ export const uploadPost = async (req, res) => {
   }
 };
 
+// upload a user
 export const uploadUser = async (req, res) => {
   try {
     const {
@@ -139,12 +154,14 @@ export const uploadUser = async (req, res) => {
       ownedPosts,
     } = req.body;
 
+    // if the user name or profile name is not provided, return a 400 error
     if (!userName || !profileName) {
       return res
         .status(400)
         .json({ message: "userName and profileName are required." });
     }
 
+    // get the mongo client
     const client = await getMongoClient();
     const db = client.db(DB);
     const usersCollection = db.collection(USER_BUCKET);
@@ -152,6 +169,8 @@ export const uploadUser = async (req, res) => {
     const existingUser = await usersCollection.findOne({
       $or: [{ userName }, { email }],
     });
+
+    // if the user already exists, return a 409 error
     if (existingUser) {
       return res
         .status(409)
@@ -159,6 +178,7 @@ export const uploadUser = async (req, res) => {
     }
 
     let userAvatarUrl = "";
+    // check if the user avatar file is provided and upload it
     if (req.file) {
       userAvatarUrl = await uploadFileToGridFS(
         req.file.originalname,
@@ -167,6 +187,7 @@ export const uploadUser = async (req, res) => {
       );
     }
 
+    // create the user document
     const newUser = {
       email,
       password,
@@ -181,8 +202,10 @@ export const uploadUser = async (req, res) => {
       ownedPosts: ownedPosts || [],
     };
 
+    // insert the user into the database
     const result = await usersCollection.insertOne(newUser);
 
+    // if the user is created successfully, return a 201 status and a message
     return res.status(201).json({
       message: "User created successfully",
       userId: result.insertedId.toString(),
@@ -193,6 +216,7 @@ export const uploadUser = async (req, res) => {
   }
 };
 
+// upload an MP3 file
 export const uploadMP3File = async (req, res) => {
   try {
     if (!req.file) {
@@ -210,6 +234,7 @@ export const uploadMP3File = async (req, res) => {
       MP3_BUCKET
     );
 
+    // if the file is uploaded successfully, return a 200 status and a message
     res.status(200).json({ message: "File uploaded successfully.", fileId });
   } catch (error) {
     console.error("Error in /upload:", error);

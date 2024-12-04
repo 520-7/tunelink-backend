@@ -10,6 +10,7 @@ import { response } from "express";
 
 dotenv.config();
 
+// get the mongo uri from the environment variables
 const mongoUri = process.env.MONGO_CONNECTION_STRING;
 const DB = "app_data";
 
@@ -35,6 +36,7 @@ describe("Upload users and posts, and perform CRUD on Posts", () => {
     await client.db(DB).dropDatabase();
   });
 
+  // test for uploading users and returning their userIds
   it("should upload all users and return their userIds (assign random avatar with probability)", async () => {
     const usersData = JSON.parse(
       fs.readFileSync(
@@ -71,6 +73,7 @@ describe("Upload users and posts, and perform CRUD on Posts", () => {
     }
   }, 100000);
 
+  // test for uploading two posts for each user and updating ownedPosts
   it("should upload two posts for each user and update ownedPosts (assign random audio and albumCover)", async () => {
     const postsData = JSON.parse(
       fs.readFileSync(
@@ -162,6 +165,7 @@ describe("Upload users and posts, and perform CRUD on Posts", () => {
     }
   }, 100000);
 
+  // test for getting all posts
   it("should GET all posts", async () => {
     for (const postId of postIds) {
       const response = await request(app).get(`/api/post/${postId}`);
@@ -170,6 +174,7 @@ describe("Upload users and posts, and perform CRUD on Posts", () => {
     }
   }, 1000000);
 
+  // test for updating the likes count of all posts
   it("should PUT all posts", async () => {
     for (const postId of postIds) {
       const responseFromPut = await request(app)
@@ -184,6 +189,7 @@ describe("Upload users and posts, and perform CRUD on Posts", () => {
     }
   }, 1000000);
 
+  // test for deleting all posts
   it("should DELETE all posts", async () => {
     for (const postId of postIds) {
       const response = await request(app).delete(`/api/post/${postId}`);

@@ -24,6 +24,7 @@ const getMongoClient = async () => {
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+// test for uploading users and linking posts
 describe("Upload users and link posts", () => {
   let userIds = [];
 
@@ -34,6 +35,7 @@ describe("Upload users and link posts", () => {
     await client.db(DB).dropDatabase();
   });
 
+  // test for uploading all users and returning their userIds
   it("should upload all users and return their userIds", async () => {
     const usersData = JSON.parse(
       fs.readFileSync(
@@ -42,7 +44,7 @@ describe("Upload users and link posts", () => {
     );
 
     for (const user of usersData) {
-      user["email"] = user["userName"];
+      user["email"] = user["userName"]; // give some email to the user
       const response = await request(app)
         .post("/api/upload/uploadUser")
         .send(user);
@@ -52,6 +54,7 @@ describe("Upload users and link posts", () => {
     }
   }, 100000);
 
+  // test for uploading two posts for each user and user should update ownedPosts
   it("should upload two posts for each user and user should update ownedPosts", async () => {
     const postsData = JSON.parse(
       fs.readFileSync(
@@ -83,6 +86,7 @@ describe("Upload users and link posts", () => {
   }, 100000);
 });
 
+// test for uploading users and linking posts (assign random avatar to users, assign random music to posts, assign random cover to posts)
 describe("Upload users and link posts (assign random avatar to users, assign random music to posts, assign random cover to posts)", () => {
   let userIds = [];
 
@@ -99,6 +103,7 @@ describe("Upload users and link posts (assign random avatar to users, assign ran
     // }
   });
 
+  // test for uploading all users and returning their userIds (assign random avatar with probability)
   it("should upload all users and return their userIds (assign random avatar with probability)", async () => {
     const usersData = JSON.parse(
       fs.readFileSync(
@@ -126,6 +131,8 @@ describe("Upload users and link posts (assign random avatar to users, assign ran
 
     const avatarFiles = fs.readdirSync(avatarDir);
 
+    // loop through all users
+    // keeps track of the user ids assigned to the users
     for (const user of usersData) {
       user["email"] = user["userName"];
       user["ownedPosts"] = [];
@@ -133,6 +140,8 @@ describe("Upload users and link posts (assign random avatar to users, assign ran
       const avatarIndex = Math.floor(Math.random() * avatarFiles.length);
       const avatarPath = path.join(avatarDir, avatarFiles[avatarIndex]);
 
+      // random chance
+      // random subset of following users
       const followingCount = Math.min(
         Math.floor(Math.random() * userIds.length),
         userIds.length
@@ -144,6 +153,8 @@ describe("Upload users and link posts (assign random avatar to users, assign ran
       }
       user.following = Array.from(following);
 
+      // random chance
+      // random subset of genres
       const genreCount = Math.floor(Math.random() * genres.length) + 1;
       user.genres = [];
       for (let i = 0; i < genreCount; i++) {

@@ -25,18 +25,18 @@ The backend repository is organized as follows:
 1. Clone this repository to your work directory
 2. Navigate into `tunelink-backend` (this repo) directory
 3. Run `npm i`, this will install all required packages for the backend
-4. Create a `.env` at root and copy contents of `.env.copy` into there, message on groupchat to get secrets, or remind ozel to email you.
-5. Remind Ozel to give you access to mongodb, not required but it is helpful
-6. Navigate to `data/`, there should be a test_data.zip, unzip it, now the path should be `data/test_data`, inside of it there are three directories and to json files. You must populate the `test_audio` with your own audio files, compressed mp3 files get corrupted when uploaded.
+4. Create a `.env` at root and copy contents of `.env.copy` into there, message on groupchat to get secrets, or remind ozel to email you, or download on provided drive link.
+5. Remind Ozel to give you access to mongodb, not required but it is helpful, for development purposes.
+6. Navigate to `data/`, there should be a test_data.zip, unzip it, now the path should be `data/test_data`, inside of it there are three directories and to json files. You must populate the `test_audio` with your own audio files, compressed mp3 files get corrupted when uploaded. Just one audio file is required, but you can add more. The ideal amount is 3 this is enough for testing.
 
 You are ready to run the backend
 
 ## Run the server
 
-1. After you have set up, run `node server.js` to start the server
+1. After you have set up, run `npm start` to start the server
 2. You can navigate to `localhost:3000/health` to check health status of the server
 
-## Routes
+## Routes For Development, developers please read
 - `localhost:3000/api-docs`
     - An interactive api documentation page that lists available routes
     - Useful for development

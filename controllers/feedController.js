@@ -15,6 +15,8 @@ dotenv.config();
 //   return client;
 // };
 
+// get a random post from the feed
+// it is not used in the app anymore
 export const getFeedPost = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -56,18 +58,25 @@ async function getRandomPost(collection, query) {
   return posts[randomIndex];
 }
 
+// get a feed of posts
 export const getFeed = async (req, res) => {
   try {
     const amount = 50;
 
+    // get the user id from the request params
     const { userId } = req.params;
+    // get the mongo client
     const client = await getMongoClient();
+    // get the database
     const db = client.db("app_data");
+    // get the users collection
     const usersCollection = db.collection("users");
+    // get the posts collection
     const postsCollection = db.collection("posts");
 
+    // create an object id from the user id
     const objId = ObjectId.createFromHexString(userId);
-
+    // find the user by id
     const user = await usersCollection.findOne({ _id: objId });
     const following = user.following.map((id) =>
       ObjectId.createFromHexString(id)
@@ -107,12 +116,12 @@ export const getFeed = async (req, res) => {
         .toArray();
 
       const matchingUserIds = usersWithMatchingGenres.map((user) => user._id);
-
+      // if there are users with matching genres, get the posts from them
       if (matchingUserIds.length !== 0) {
         case2Posts = await postsCollection
           .find({ ownerUser: { $in: matchingUserIds } })
           .toArray();
-
+        // sort the posts randomly
         case2Posts.sort(() => Math.random() - 0.5);
         case2Posts = case2Posts.slice(0, targetCount);
       }
@@ -128,9 +137,12 @@ export const getFeed = async (req, res) => {
       .limit(targetCount)
       .toArray();
 
+    // combine the posts from the three cases
     const recommendedPosts = [...case1Posts, ...case2Posts, ...case3Posts];
+    // sort the posts randomly
     recommendedPosts.sort(() => Math.random() - 0.5);
 
+    // return the feed
     res.json({ feed: recommendedPosts });
   } catch (error) {
     console.error("Error in /get_feed:", error);

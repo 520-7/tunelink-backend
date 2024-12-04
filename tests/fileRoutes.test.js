@@ -42,6 +42,7 @@ describe("Upload users and posts, and perform GET on Files", () => {
       )
     );
 
+    // get the directory name of the current file
     const avatarDir = path.join(
       __dirname,
       "..",
@@ -53,9 +54,13 @@ describe("Upload users and posts, and perform GET on Files", () => {
     const avatarFiles = fs.readdirSync(avatarDir);
 
     for (const user of usersData) {
+      // set the email to the user name
       user["email"] = user["userName"];
+      // decide if the user should have an avatar
       const shouldAttachAvatar = Math.random() < 0.8;
+      // get a random avatar file
       const avatarIndex = Math.floor(Math.random() * avatarFiles.length);
+      // get the path to the avatar file
       const avatarPath = path.join(avatarDir, avatarFiles[avatarIndex]);
 
       const response = await request(app)
@@ -75,6 +80,7 @@ describe("Upload users and posts, and perform GET on Files", () => {
       )
     );
 
+    // get the directory name of the current file
     const audioDir = path.join(
       __dirname,
       "..",
@@ -90,18 +96,25 @@ describe("Upload users and posts, and perform GET on Files", () => {
       "test_albumCover"
     );
 
+    // get the audio files
     const audioFiles = fs.readdirSync(audioDir);
+    // get the album cover files
     const albumCoverFiles = fs.readdirSync(albumCoverDir);
 
     for (let i = 0; i < userIds.length; i++) {
+      // decide if the post should have an album cover
       let shouldAttachAlbumCover = Math.random() < 0.8;
+      // get a random album cover file
       let albumCoverIndex = Math.floor(Math.random() * albumCoverFiles.length);
+      // get the path to the album cover file
       let albumCoverPath = path.join(
         albumCoverDir,
         albumCoverFiles[albumCoverIndex]
       );
 
+      // get a random audio file
       let audioIndex = Math.floor(Math.random() * audioFiles.length);
+      // get the path to the audio file
       let audioPath = path.join(audioDir, audioFiles[audioIndex]);
 
       const userId = userIds[i];
@@ -122,13 +135,17 @@ describe("Upload users and posts, and perform GET on Files", () => {
 
       // Second post case has different settings
       shouldAttachAlbumCover = Math.random() < 0.8;
+      // get a random album cover file
       albumCoverIndex = Math.floor(Math.random() * albumCoverFiles.length);
+      // get the path to the album cover file
       albumCoverPath = path.join(
         albumCoverDir,
         albumCoverFiles[albumCoverIndex]
       );
 
+      // get a random audio file
       audioIndex = Math.floor(Math.random() * audioFiles.length);
+      // get the path to the audio file
       audioPath = path.join(audioDir, audioFiles[audioIndex]);
 
       const responseSecondPost = await request(app)
