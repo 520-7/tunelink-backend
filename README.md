@@ -26,6 +26,7 @@ The backend repository is organized as follows:
 2. Navigate into `tunelink-backend` (this repo) directory
 3. Run `npm i`, this will install all required packages for the backend
 4. Create a `.env` at root and copy contents of `.env.copy` into there, message on groupchat to get secrets, or remind ozel to email you, or download on provided drive link.
+5. download .env from this url `https://drive.google.com/file/d/1CXZcNirtCNC43OU_aRnYcX-yG6y0CEGw/view?usp=sharing`.
 5. Remind Ozel to give you access to mongodb, not required but it is helpful, for development purposes.
 6. Navigate to `data/`
 7. Unzip `test_data.zip`.
