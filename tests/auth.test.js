@@ -105,7 +105,7 @@ describe("Should sign up and then login", () => {
     };
 
     // try to login the bad user and check the response
-    response = await request(app).post("/auth/login").send(bad_user);
+    let response = await request(app).post("/auth/login").send(bad_user);
     expect(response.status).toBe(400);
 
     // create a bad user with missing fields
